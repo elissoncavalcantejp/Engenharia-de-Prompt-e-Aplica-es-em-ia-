@@ -1,9 +1,0 @@
-Explicação Rápida do Projeto
-O projeto é um Mini App de Agendamento de Serviços — um sistema digital que resolve um problema real e simples: clientes esquecem consultas e profissionais perdem tempo com agendamentos manuais pelo WhatsApp.
-O que o sistema faz, na prática:
-O cliente acessa uma página, preenche um formulário com nome, e-mail, serviço e horário. Assim que confirma, os dados vão direto para um banco de dados online (Airtable), que dispara uma automação (Make) e manda um e-mail de confirmação formatado em português para o cliente — tudo automático, sem intervenção humana.
-O profissional (dono do salão, consultório etc.) acessa o Painel Admin e vê todos os agendamentos em tempo real, podendo confirmar, cancelar ou excluir com um clique.
-A parte acadêmica mais importante — o Vibecode:
-O ponto de destaque do projeto é justamente onde o No-Code "trava". Ferramentas visuais como Airtable salvam a data no formato técnico 2026-05-20T14:30:00.000Z, que chegaria no e-mail do cliente de forma confusa. Para resolver isso, foi usado um script JavaScript de apenas algumas linhas que converte essa data automaticamente para 20/05/2026 às 14:30 — o formato que qualquer brasileiro entende. Esse é o conceito central do Vibecode: usar IA e um pouquinho de código para quebrar as limitações das ferramentas visuais, sem abandoná-las.
-A pilha de ferramentas escolhida foi:
-Airtable (banco de dados + formulário) + Make (automação) + JavaScript pontual (transformação de dados) + Gmail (disparo de e-mail). Essa combinação foi escolhida por ser mais rápida de montar, mais barata e mais fácil de manter do que alternativas como Bubble ou Adalo — o que justifica tecnicamente a escolha no relatório.
