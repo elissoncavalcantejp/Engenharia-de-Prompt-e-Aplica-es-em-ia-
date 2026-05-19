@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Studio Élara — Agendamento Online</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --ouro: #c9a96e;
+  --ouro-claro: #e2c898;
+  --ouro-escuro: #a07840;
+  --preto: #0d0d0d;
+  --preto-suave: #161616;
+  --preto-card: #1c1c1c;
+  --preto-borda: #2a2a2a;
+  --creme: #f5f0e8;
+  --texto-claro: #f0ece4;
+  --texto-mudo: #888;
+  --texto-suave: #bbb;
+  --radius: 14px;
+}
+html { scroll-behavior: smooth; }
+body { font-family: 'DM Sans', sans-serif; background: var(--preto); color: var(--texto-claro); overflow-x: hidden; }
+
+/* TOPBAR */
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  height: 60px;
+  background: rgba(13,13,13,0.94);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--preto-borda);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 2.5rem;
+}
+.logo { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-weight: 400; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ouro); }
+.logo span { color: var(--texto-mudo); font-weight: 300; font-size: 0.88rem; margin-left: 6px; }
+.nav { display: flex; gap: 2px; align-items: center; }
+.nav a { color: var(--texto-mudo); text-decoration: none; font-size: 0.8rem; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; padding: 6px 14px; border-radius: 8px; transition: all 0.2s; }
+.nav a:hover { color: var(--ouro-claro); }
+.nav .cta { background: var(--ouro); color: var(--preto); margin-left: 8px; font-weight: 700; }
+.nav .cta:hover { background: var(--ouro-claro); }
+
+/* HERO */
+.hero { min-height: 100vh; display: grid; grid-template-columns: 1fr 1fr; padding-top: 60px; position: relative; overflow: hidden; }
+.hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 70% 40%, rgba(201,169,110,0.07) 0%, transparent 60%); pointer-events: none; }
+.hero-left { padding: 5rem 4rem 4rem; display: flex; flex-direction: column; justify-content: center; }
+.eyebrow { display: flex; align-items: center; gap: 10px; margin-bottom: 1.8rem; }
+.eyebrow-line { width: 32px; height: 1px; background: var(--ouro); }
+.eyebrow span { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ouro); }
+.hero-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(3rem, 5vw, 5rem); font-weight: 300; line-height: 1.05; margin-bottom: 1.5rem; }
+.hero-title em { font-style: italic; color: var(--ouro); }
+.hero-desc { color: var(--texto-mudo); font-size: 0.95rem; line-height: 1.8; max-width: 400px; margin-bottom: 2.5rem; }
+.hero-btns { display: flex; gap: 12px; flex-wrap: wrap; }
+.btn-primary { background: var(--ouro); color: var(--preto); border: none; border-radius: 10px; padding: 13px 26px; font-family: 'DM Sans', sans-serif; font-size: 0.875rem; font-weight: 700; letter-spacing: 0.04em; cursor: pointer; transition: all 0.25s; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; }
+.btn-primary:hover { background: var(--ouro-claro); transform: translateY(-2px); box-shadow: 0 8px 28px rgba(201,169,110,0.3); }
+.btn-outline { background: transparent; color: var(--ouro-claro); border: 1px solid var(--preto-borda); border-radius: 10px; padding: 13px 26px; font-family: 'DM Sans', sans-serif; font-size: 0.875rem; font-weight: 500; cursor: pointer; transition: all 0.25s; text-decoration: none; }
+.btn-outline:hover { border-color: var(--ouro); color: var(--ouro); }
+.hero-badges { display: flex; gap: 2rem; margin-top: 3rem; padding-top: 2.5rem; border-top: 1px solid var(--preto-borda); }
+.hb-num { font-family: 'Cormorant Garamond', serif; font-size: 2rem; color: var(--ouro); display: block; line-height: 1; }
+.hb-label { font-size: 0.75rem; color: var(--texto-mudo); }
+
+.hero-right { background: var(--preto-suave); border-left: 1px solid var(--preto-borda); display: flex; align-items: center; justify-content: center; padding: 4rem 3rem; }
+
+/* FORM */
+.form-card { width: 100%; max-width: 420px; }
+.form-card-title { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; font-weight: 400; margin-bottom: 0.3rem; }
+.form-card-sub { font-size: 0.8rem; color: var(--texto-mudo); margin-bottom: 1.8rem; }
+.form-grid { display: flex; flex-direction: column; gap: 0.9rem; }
+.form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem; }
+.field { display: flex; flex-direction: column; gap: 5px; }
+.field label { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--texto-mudo); }
+.field input, .field select { background: var(--preto-card); border: 1px solid var(--preto-borda); border-radius: 9px; padding: 11px 13px; font-family: 'DM Sans', sans-serif; font-size: 0.875rem; color: var(--texto-claro); outline: none; transition: all 0.2s; width: 100%; }
+.field input:focus, .field select:focus { border-color: var(--ouro-escuro); box-shadow: 0 0 0 3px rgba(201,169,110,0.1); }
+.field input::placeholder { color: #555; }
+.field select { appearance: none; cursor: pointer; }
+.sel-wrap { position: relative; }
+.sel-wrap::after { content: '▾'; position: absolute; right: 13px; top: 50%; transform: translateY(-50%); color: #555; pointer-events: none; font-size: 0.8rem; }
+.field input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(0.4); }
+.btn-agendar { background: var(--ouro); color: var(--preto); border: none; border-radius: 10px; padding: 14px; font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 700; cursor: pointer; width: 100%; margin-top: 4px; letter-spacing: 0.04em; transition: all 0.25s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+.btn-agendar:hover { background: var(--ouro-claro); transform: translateY(-1px); box-shadow: 0 8px 28px rgba(201,169,110,0.25); }
+
+/* SECTIONS */
+.section { padding: 6rem 0; }
+.container { max-width: 1100px; margin: 0 auto; padding: 0 2.5rem; }
+.section-tag { display: flex; align-items: center; gap: 10px; margin-bottom: 1rem; }
+.section-tag-line { width: 28px; height: 1px; background: var(--ouro); }
+.section-tag span { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ouro); }
+.section-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem, 4vw, 3rem); font-weight: 300; line-height: 1.15; margin-bottom: 1.2rem; }
+.section-title em { font-style: italic; color: var(--ouro); }
+
+/* SOBRE */
+.sobre-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; }
+.sobre-text p { color: var(--texto-mudo); font-size: 0.95rem; line-height: 1.85; margin-bottom: 1rem; }
+.sobre-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 2rem; }
+.sobre-card { background: var(--preto-card); border: 1px solid var(--preto-borda); border-radius: var(--radius); padding: 1.25rem; }
+.sobre-card .ic { font-size: 1.4rem; margin-bottom: 0.5rem; }
+.sobre-card h4 { font-size: 0.875rem; font-weight: 600; color: var(--texto-claro); margin-bottom: 4px; }
+.sobre-card p { font-size: 0.78rem; color: var(--texto-mudo); line-height: 1.5; }
+.photo-frame { background: var(--preto-card); border: 1px solid var(--preto-borda); border-radius: 20px; aspect-ratio: 4/5; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+.photo-frame::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 30% 20%, rgba(201,169,110,0.1), transparent 60%); }
+.photo-placeholder { text-align: center; color: var(--texto-mudo); }
+.photo-placeholder .big { font-size: 4rem; margin-bottom: 1rem; display: block; }
+.photo-placeholder p { font-size: 0.8rem; max-width: 160px; line-height: 1.5; }
+.float-badge { position: absolute; bottom: -0.5rem; right: -0.5rem; background: var(--ouro); color: var(--preto); border-radius: 12px; padding: 1rem 1.25rem; font-size: 0.8rem; font-weight: 700; }
+.float-badge .num { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; display: block; line-height: 1; }
+
+/* SERVIÇOS */
+.servicos-bg { background: var(--preto-suave); border-top: 1px solid var(--preto-borda); border-bottom: 1px solid var(--preto-borda); }
+.servicos-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 3rem; }
+.serv-card { background: var(--preto-card); border: 1px solid var(--preto-borda); border-radius: var(--radius); padding: 1.75rem 1.5rem; transition: all 0.25s; }
+.serv-card:hover { border-color: var(--ouro-escuro); transform: translateY(-3px); box-shadow: 0 12px 40px rgba(0,0,0,0.4); }
+.serv-card .ic { font-size: 1.6rem; margin-bottom: 1rem; }
+.serv-card h3 { font-size: 1rem; font-weight: 600; color: var(--texto-claro); margin-bottom: 6px; }
+.serv-card p { font-size: 0.8rem; color: var(--texto-mudo); line-height: 1.6; margin-bottom: 1rem; }
+.serv-footer { display: flex; justify-content: space-between; align-items: center; }
+.serv-preco { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; color: var(--ouro); }
+.serv-tempo { font-size: 0.75rem; color: var(--texto-mudo); }
+
+/* FERRAMENTAS */
+.ferr-intro { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start; margin-bottom: 3rem; }
+.ferr-desc p { color: var(--texto-mudo); font-size: 0.9rem; line-height: 1.85; margin-bottom: 0.8rem; }
+
+/* Fluxo */
+.fluxo-row { display: flex; align-items: center; margin-bottom: 2.5rem; overflow-x: auto; padding-bottom: 0.5rem; }
+.fluxo-step { display: flex; flex-direction: column; align-items: center; text-align: center; min-width: 120px; }
+.fluxo-circle { width: 52px; height: 52px; border-radius: 50%; border: 1px solid var(--preto-borda); background: var(--preto-card); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; margin-bottom: 0.7rem; transition: all 0.25s; }
+.fluxo-step:hover .fluxo-circle { border-color: var(--ouro); }
+.fluxo-step-label { font-size: 0.75rem; font-weight: 600; color: var(--texto-claro); margin-bottom: 2px; }
+.fluxo-step-sub { font-size: 0.67rem; color: var(--texto-mudo); line-height: 1.4; max-width: 100px; }
+.fluxo-line { flex: 1; min-width: 24px; height: 1px; background: linear-gradient(to right, var(--preto-borda), var(--ouro-escuro), var(--preto-borda)); position: relative; margin-bottom: 2rem; }
+.fluxo-line::after { content: '›'; position: absolute; right: -4px; top: 50%; transform: translateY(-50%); color: var(--ouro-escuro); }
+
+.ferr-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
+.ferr-card { background: var(--preto-card); border: 1px solid var(--preto-borda); border-radius: var(--radius); padding: 1.5rem; transition: all 0.25s; }
+.ferr-card:hover { border-color: var(--ouro-escuro); transform: translateY(-2px); }
+.ferr-logo { width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; margin-bottom: 1rem; }
+.fa { background: rgba(255,185,75,0.1); }
+.fm { background: rgba(109,94,255,0.1); }
+.fg { background: rgba(234,67,53,0.1); }
+.fj { background: rgba(247,223,30,0.1); }
+.fh { background: rgba(241,101,41,0.1); }
+.fc { background: rgba(201,169,110,0.1); }
+.ferr-card h4 { font-size: 0.9rem; font-weight: 600; color: var(--texto-claro); margin-bottom: 4px; }
+.ferr-role { display: inline-block; background: var(--preto-borda); color: var(--texto-mudo); font-size: 0.67rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 2px 8px; border-radius: 100px; margin-bottom: 8px; }
+.ferr-card p { font-size: 0.78rem; color: var(--texto-mudo); line-height: 1.6; }
+
+/* ADMIN */
+.admin-bg { background: var(--preto-suave); border-top: 1px solid var(--preto-borda); }
+.stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.5rem; }
+.stat-card { background: var(--preto-card); border: 1px solid var(--preto-borda); border-radius: var(--radius); padding: 1.25rem 1.5rem; }
+.stat-label { font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--texto-mudo); margin-bottom: 6px; }
+.stat-value { font-family: 'Cormorant Garamond', serif; font-size: 2.2rem; color: var(--ouro); line-height: 1; }
+.filter-bar { display: flex; gap: 10px; margin-bottom: 1.2rem; flex-wrap: wrap; }
+.filter-bar input { background: var(--preto-card); border: 1px solid var(--preto-borda); border-radius: 9px; padding: 9px 14px; font-family: 'DM Sans', sans-serif; font-size: 0.85rem; color: var(--texto-claro); outline: none; flex: 1; min-width: 200px; transition: border-color 0.2s; }
+.filter-bar input:focus { border-color: var(--ouro-escuro); }
+.filter-bar input::placeholder { color: #555; }
+.filter-btn { background: var(--preto-card); border: 1px solid var(--preto-borda); border-radius: 9px; padding: 8px 14px; font-family: 'DM Sans', sans-serif; font-size: 0.78rem; font-weight: 600; color: var(--texto-mudo); cursor: pointer; transition: all 0.2s; }
+.filter-btn.active, .filter-btn:hover { border-color: var(--ouro-escuro); color: var(--ouro); }
+.table-wrap { background: var(--preto-card); border: 1px solid var(--preto-borda); border-radius: var(--radius); overflow: hidden; }
+table { width: 100%; border-collapse: collapse; }
+thead tr { background: rgba(255,255,255,0.02); }
+thead th { text-align: left; padding: 12px 16px; font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--texto-mudo); border-bottom: 1px solid var(--preto-borda); white-space: nowrap; }
+tbody tr { border-bottom: 1px solid rgba(255,255,255,0.04); transition: background 0.15s; cursor: pointer; }
+tbody tr:last-child { border-bottom: none; }
+tbody tr:hover { background: rgba(201,169,110,0.04); }
+td { padding: 13px 16px; font-size: 0.85rem; vertical-align: middle; }
+.td-nome { font-weight: 600; color: var(--texto-claro); }
+.td-email { font-size: 0.78rem; color: var(--texto-mudo); }
+.td-serv { display: inline-flex; align-items: center; background: rgba(255,255,255,0.05); border-radius: 7px; padding: 4px 10px; font-size: 0.78rem; color: var(--texto-suave); }
+.td-data { font-size: 0.8rem; color: var(--texto-suave); white-space: nowrap; }
+.sbadge { display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; border-radius: 100px; font-size: 0.72rem; font-weight: 600; cursor: pointer; }
+.sbadge::before { content: ''; width: 5px; height: 5px; border-radius: 50%; }
+.s-Pendente { background: rgba(240,173,78,0.12); color: #f0ad4e; }
+.s-Pendente::before { background: #f0ad4e; }
+.s-Confirmado { background: rgba(201,169,110,0.12); color: var(--ouro); }
+.s-Confirmado::before { background: var(--ouro); }
+.s-Cancelado { background: rgba(192,57,43,0.12); color: #e74c3c; }
+.s-Cancelado::before { background: #e74c3c; }
+.btn-trash { background: none; border: none; color: #555; cursor: pointer; padding: 6px; border-radius: 7px; font-size: 1rem; transition: all 0.2s; }
+.btn-trash:hover { color: #e74c3c; background: rgba(192,57,43,0.1); }
+.empty-st { text-align: center; padding: 3.5rem; color: var(--texto-mudo); font-size: 0.9rem; }
+
+/* FOOTER */
+footer { background: var(--preto); border-top: 1px solid var(--preto-borda); padding: 2rem 2.5rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+.footer-logo { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; color: var(--ouro); letter-spacing: 0.1em; }
+.footer-credits { font-size: 0.75rem; color: var(--texto-mudo); }
+.footer-credits strong { color: var(--ouro); }
+
+/* TOAST */
+.toast { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--preto-card); border: 1px solid var(--preto-borda); color: var(--texto-claro); padding: 12px 22px; border-radius: 100px; font-size: 0.85rem; font-weight: 500; transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1); z-index: 999; display: flex; align-items: center; gap: 8px; white-space: nowrap; }
+.toast.show { transform: translateX(-50%) translateY(0); }
+.toast.success { background: rgba(201,169,110,0.15); border-color: var(--ouro-escuro); color: var(--ouro-claro); }
+.toast.error { background: rgba(192,57,43,0.15); border-color: rgba(192,57,43,0.4); color: #e74c3c; }
+
+/* MODAL */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 200; opacity: 0; pointer-events: none; transition: opacity 0.25s; padding: 1rem; }
+.modal-overlay.open { opacity: 1; pointer-events: all; }
+.modal { background: var(--preto-card); border: 1px solid var(--preto-borda); border-radius: 20px; padding: 2rem; width: 100%; max-width: 440px; transform: scale(0.95) translateY(10px); transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1); box-shadow: 0 24px 80px rgba(0,0,0,0.6); }
+.modal-overlay.open .modal { transform: scale(1) translateY(0); }
+.modal-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; }
+.modal-title { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; color: var(--texto-claro); }
+.modal-close { background: rgba(255,255,255,0.06); border: none; width: 32px; height: 32px; border-radius: 8px; cursor: pointer; color: var(--texto-mudo); transition: all 0.2s; display: flex; align-items: center; justify-content: center; }
+.modal-close:hover { background: rgba(192,57,43,0.15); color: #e74c3c; }
+.mrow { display: flex; align-items: flex-start; gap: 12px; padding: 11px 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+.mrow:last-of-type { border-bottom: none; }
+.mic { font-size: 1rem; margin-top: 2px; }
+.mlbl { font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--texto-mudo); margin-bottom: 3px; }
+.mval { font-size: 0.875rem; color: var(--texto-claro); }
+.modal-actions { display: flex; gap: 8px; margin-top: 1.5rem; }
+.mbtn { flex: 1; padding: 10px; border-radius: 9px; font-family: 'DM Sans', sans-serif; font-size: 0.825rem; font-weight: 600; cursor: pointer; border: 1px solid; transition: all 0.2s; }
+.mc { background: rgba(201,169,110,0.1); color: var(--ouro); border-color: rgba(201,169,110,0.2); }
+.mc:hover { background: var(--ouro); color: var(--preto); }
+.mx { background: rgba(192,57,43,0.1); color: #e74c3c; border-color: rgba(192,57,43,0.2); }
+.mx:hover { background: #c0392b; color: #fff; }
+.md { background: rgba(255,255,255,0.04); color: var(--texto-mudo); border-color: var(--preto-borda); }
+.md:hover { background: rgba(192,57,43,0.1); color: #e74c3c; border-color: rgba(192,57,43,0.2); }
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .hero { grid-template-columns: 1fr; }
+  .hero-right { border-left: none; border-top: 1px solid var(--preto-borda); }
+  .sobre-grid, .ferr-intro { grid-template-columns: 1fr; gap: 2rem; }
+  .servicos-grid, .ferr-grid { grid-template-columns: 1fr 1fr; }
+  .stats-row { grid-template-columns: 1fr 1fr; }
+  .hero-left { padding: 3rem 1.5rem; }
+  .hero-right { padding: 2.5rem 1.5rem; }
+  .container { padding: 0 1.5rem; }
+}
+</style>
+</head>
+<body>
+
+<nav class="topbar">
+  <div class="logo">Studio Élara <span>/ Beleza</span></div>
+  <div class="nav">
+    <a href="#sobre">Sobre</a>
+    <a href="#servicos">Serviços</a>
+    <a href="#ferramentas">Tecnologia</a>
+    <a href="#agendar" class="cta">Agendar →</a>
+  </div>
+</nav>
+
+<!-- HERO + FORMULÁRIO -->
+<section class="hero" id="agendar">
+  <div class="hero-left">
+    <div class="eyebrow"><div class="eyebrow-line"></div><span>Studio Élara — Est. 2019</span></div>
+    <h1 class="hero-title">Beleza com<br>propósito<br><em>e precisão</em></h1>
+    <p class="hero-desc">Agende seu horário de forma simples e rápida. Confirmação automática por e-mail, sem filas e sem ligações. Seu tempo é valioso.</p>
+    <div class="hero-btns">
+      <a href="#agendar" class="btn-primary">Fazer Agendamento →</a>
+      <a href="#servicos" class="btn-outline">Ver Serviços</a>
+    </div>
+    <div class="hero-badges">
+      <div><span class="hb-num">5+</span><span class="hb-label">Anos de experiência</span></div>
+      <div><span class="hb-num">800+</span><span class="hb-label">Clientes atendidos</span></div>
+      <div><span class="hb-num">4.9★</span><span class="hb-label">Avaliação média</span></div>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="form-card">
+      <h2 class="form-card-title">Novo Agendamento</h2>
+      <p class="form-card-sub">Preencha abaixo e receba a confirmação por e-mail.</p>
+      <div class="form-grid">
+        <div class="field"><label>Nome completo *</label><input type="text" id="f-nome" placeholder="Ex: Maria Oliveira"></div>
+        <div class="field"><label>E-mail *</label><input type="email" id="f-email" placeholder="seuemail@email.com"></div>
+        <div class="form-row-2">
+          <div class="field"><label>Telefone</label><input type="tel" id="f-tel" placeholder="(11) 99999-9999"></div>
+          <div class="field"><label>Serviço *</label><div class="sel-wrap"><select id="f-servico"><option value="">Selecione…</option><option value="Corte Feminino">✂️ Corte Feminino — R$80</option><option value="Corte Masculino">✂️ Corte Masculino — R$50</option><option value="Coloração Completa">🎨 Coloração — R$180</option><option value="Hidratação Profunda">💆 Hidratação — R$90</option><option value="Manicure & Pedicure">💅 Manicure & Pedicure — R$70</option><option value="Tratamento Capilar">✨ Tratamento Capilar — R$120</option></select></div></div>
+        </div>
+        <div class="form-row-2">
+          <div class="field"><label>Data *</label><input type="date" id="f-data"></div>
+          <div class="field"><label>Horário *</label><div class="sel-wrap"><select id="f-hora"><option value="">Selecione…</option><option>09:00</option><option>09:30</option><option>10:00</option><option>10:30</option><option>11:00</option><option>11:30</option><option>14:00</option><option>14:30</option><option>15:00</option><option>15:30</option><option>16:00</option><option>16:30</option><option>17:00</option><option>17:30</option><option>18:00</option></select></div></div>
+        </div>
+        <div class="field"><label>Observações (opcional)</label><input type="text" id="f-obs" placeholder="Ex: preferência de profissional…"></div>
+        <button class="btn-agendar" onclick="submitForm()">Confirmar Agendamento →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SOBRE -->
+<section class="section" id="sobre">
+  <div class="container">
+    <div class="sobre-grid">
+      <div class="sobre-text">
+        <div class="section-tag"><div class="section-tag-line"></div><span>Sobre o Studio</span></div>
+        <h2 class="section-title">Mais de 5 anos<br>transformando <em>vidas</em></h2>
+        <p>O Studio Élara nasceu em 2019 com uma missão clara: oferecer serviços de beleza de alto nível em um ambiente acolhedor e moderno. Localizado no coração de São Paulo, atende clientes que valorizam experiência, qualidade e atenção aos detalhes.</p>
+        <p>Cada atendimento é pensado do início ao fim. Por isso investimos em tecnologia para eliminar a burocracia e focar no que realmente importa: o cuidado com você.</p>
+        <div class="sobre-cards">
+          <div class="sobre-card"><div class="ic">✂️</div><h4>Profissionais Especializados</h4><p>Equipe treinada e certificada nas principais técnicas do mercado.</p></div>
+          <div class="sobre-card"><div class="ic">🌿</div><h4>Produtos Premium</h4><p>Marcas de alta performance e baixo impacto ambiental.</p></div>
+          <div class="sobre-card"><div class="ic">📍</div><h4>São Paulo, SP</h4><p>Rua das Flores, 412 — Jardins. Seg a Sáb, 9h às 19h.</p></div>
+          <div class="sobre-card"><div class="ic">⚡</div><h4>Agendamento Digital</h4><p>Confirmação automática por e-mail em menos de 1 minuto.</p></div>
+        </div>
+      </div>
+      <div style="position:relative;">
+        <div class="photo-frame">
+          <div class="photo-placeholder"><span class="big">✦</span><p>Foto do estúdio ou equipe</p></div>
+          <div class="float-badge"><span class="num">800+</span>clientes satisfeitos</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVIÇOS -->
+<section class="section servicos-bg" id="servicos">
+  <div class="container">
+    <div class="section-tag"><div class="section-tag-line"></div><span>O que oferecemos</span></div>
+    <h2 class="section-title">Nossos <em>Serviços</em></h2>
+    <div class="servicos-grid">
+      <div class="serv-card"><div class="ic">✂️</div><h3>Corte Feminino</h3><p>Corte personalizado com análise do formato do rosto e tipo de cabelo.</p><div class="serv-footer"><span class="serv-preco">R$ 80</span><span class="serv-tempo">⏱ 45 min</span></div></div>
+      <div class="serv-card"><div class="ic">✂️</div><h3>Corte Masculino</h3><p>Corte clássico ou moderno com acabamento impecável.</p><div class="serv-footer"><span class="serv-preco">R$ 50</span><span class="serv-tempo">⏱ 30 min</span></div></div>
+      <div class="serv-card"><div class="ic">🎨</div><h3>Coloração Completa</h3><p>Coloração profissional com produtos de proteção capilar avançada.</p><div class="serv-footer"><span class="serv-preco">R$ 180</span><span class="serv-tempo">⏱ 120 min</span></div></div>
+      <div class="serv-card"><div class="ic">💆</div><h3>Hidratação Profunda</h3><p>Tratamento intensivo de nutrição e reconstrução dos fios.</p><div class="serv-footer"><span class="serv-preco">R$ 90</span><span class="serv-tempo">⏱ 60 min</span></div></div>
+      <div class="serv-card"><div class="ic">💅</div><h3>Manicure & Pedicure</h3><p>Cuidado completo para mãos e pés com acabamento duradouro.</p><div class="serv-footer"><span class="serv-preco">R$ 70</span><span class="serv-tempo">⏱ 60 min</span></div></div>
+      <div class="serv-card"><div class="ic">✨</div><h3>Tratamento Capilar</h3><p>Protocolo personalizado de recuperação para cabelos danificados.</p><div class="serv-footer"><span class="serv-preco">R$ 120</span><span class="serv-tempo">⏱ 90 min</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FERRAMENTAS -->
+<section class="section" id="ferramentas">
+  <div class="container">
+    <div class="section-tag"><div class="section-tag-line"></div><span>Stack Tecnológico — Vibecode</span></div>
+    <div class="ferr-intro">
+      <div><h2 class="section-title">As <em>ferramentas</em><br>por trás do sistema</h2></div>
+      <div class="ferr-desc">
+        <p>Este sistema foi construído sob o paradigma <strong style="color:var(--ouro)">Vibecode</strong> — abordagem híbrida que combina ferramentas No-Code com scripts Low-Code cirúrgicos gerados com IA, para superar as limitações das plataformas tradicionais.</p>
+        <p>O resultado é um MVP funcional montado em horas, com custo zero de infraestrutura, arquitetura modular e código de produção.</p>
+      </div>
+    </div>
+    <div class="fluxo-row">
+      <div class="fluxo-step"><div class="fluxo-circle">📋</div><div class="fluxo-step-label">Formulário</div><div class="fluxo-step-sub">Cliente preenche e envia</div></div>
+      <div class="fluxo-line"></div>
+      <div class="fluxo-step"><div class="fluxo-circle">🗄️</div><div class="fluxo-step-label">Airtable</div><div class="fluxo-step-sub">Dados salvos no banco</div></div>
+      <div class="fluxo-line"></div>
+      <div class="fluxo-step"><div class="fluxo-circle">⚙️</div><div class="fluxo-step-label">Make</div><div class="fluxo-step-sub">Automação disparada</div></div>
+      <div class="fluxo-line"></div>
+      <div class="fluxo-step"><div class="fluxo-circle">🧠</div><div class="fluxo-step-label">Script JS</div><div class="fluxo-step-sub">Data formatada pt-BR</div></div>
+      <div class="fluxo-line"></div>
+      <div class="fluxo-step"><div class="fluxo-circle">📧</div><div class="fluxo-step-label">Gmail</div><div class="fluxo-step-sub">E-mail ao cliente</div></div>
+    </div>
+    <div class="ferr-grid">
+      <div class="ferr-card"><div class="ferr-logo fa">🟡</div><h4>Airtable</h4><span class="ferr-role">Banco de Dados + UI</span><p>Armazenamento dos agendamentos e geração automática do formulário público via Form View.</p></div>
+      <div class="ferr-card"><div class="ferr-logo fm">🟣</div><h4>Make (Integromat)</h4><span class="ferr-role">Automação</span><p>Motor de integração que detecta novos registros via webhook e orquestra o fluxo de confirmação.</p></div>
+      <div class="ferr-card"><div class="ferr-logo fj">🟨</div><h4>JavaScript (Low-Code)</h4><span class="ferr-role">Vibecode — IA + Código</span><p>Script gerado com IA que converte o formato ISO 8601 do Airtable para o padrão brasileiro DD/MM/AAAA às HH:MM.</p></div>
+      <div class="ferr-card"><div class="ferr-logo fg">🔴</div><h4>Gmail / SMTP</h4><span class="ferr-role">Comunicação</span><p>Disparo do e-mail de confirmação com nome, serviço e data formatada em linguagem natural.</p></div>
+      <div class="ferr-card"><div class="ferr-logo fh">🟠</div><h4>HTML + CSS + JS</h4><span class="ferr-role">Front-end</span><p>Interface pública e painel administrativo sem framework, com foco em performance e elegância visual.</p></div>
+      <div class="ferr-card"><div class="ferr-logo fc">✦</div><h4>Claude (IA)</h4><span class="ferr-role">Engenharia de Prompt</span><p>Utilizado para identificar limitações, gerar scripts sob medida e arquitetar o fluxo completo do sistema.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- PAINEL ADMIN -->
+<section class="section admin-bg" id="admin">
+  <div class="container">
+    <div class="section-tag"><div class="section-tag-line"></div><span>Gestão interna</span></div>
+    <h2 class="section-title" style="margin-bottom:1.5rem;">Painel <em>Admin</em></h2>
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-label">Total</div><div class="stat-value" id="stat-total">0</div></div>
+      <div class="stat-card"><div class="stat-label">Pendentes</div><div class="stat-value" id="stat-pendente" style="color:#f0ad4e;">0</div></div>
+      <div class="stat-card"><div class="stat-label">Confirmados</div><div class="stat-value" id="stat-confirmado">0</div></div>
+      <div class="stat-card"><div class="stat-label">Cancelados</div><div class="stat-value" id="stat-cancelado" style="color:#e74c3c;">0</div></div>
+    </div>
+    <div class="filter-bar">
+      <input type="text" id="search" placeholder="🔍  Buscar por nome, e-mail ou serviço…" oninput="renderTable()">
+      <button class="filter-btn active" data-f="Todos" onclick="setFilter(this)">Todos</button>
+      <button class="filter-btn" data-f="Pendente" onclick="setFilter(this)">Pendente</button>
+      <button class="filter-btn" data-f="Confirmado" onclick="setFilter(this)">Confirmado</button>
+      <button class="filter-btn" data-f="Cancelado" onclick="setFilter(this)">Cancelado</button>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>#</th><th>Cliente</th><th>Serviço</th><th>Data e Hora</th><th>Status</th><th></th></tr></thead>
+        <tbody id="table-body"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo">Studio Élara</div>
+  <div class="footer-credits">Desenvolvido com <strong>Airtable + Make + JavaScript</strong> — Paradigma <strong>Vibecode</strong> · Projeto Acadêmico 2026</div>
+</footer>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <p style="font-size:0.68rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--texto-mudo);margin-bottom:4px;">Agendamento</p>
+        <h2 class="modal-title" id="modal-name">—</h2>
+      </div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div id="modal-body"></div>
+    <div class="modal-actions" id="modal-actions"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+let agendamentos = JSON.parse(localStorage.getItem('ag_elara') || '[]');
+let filtroAtivo = 'Todos';
+
+if (agendamentos.length === 0) {
+  agendamentos = [
+    { id:1, nome:'Ana Paula Rodrigues', email:'ana@email.com', tel:'(11) 98765-4321', servico:'Coloração Completa', data:'2026-05-22', hora:'10:00', obs:'Mechas loiras', status:'Confirmado' },
+    { id:2, nome:'Carlos Mendes', email:'carlos@email.com', tel:'(11) 97654-3210', servico:'Corte Masculino', data:'2026-05-22', hora:'11:00', obs:'', status:'Pendente' },
+    { id:3, nome:'Juliana Costa', email:'ju@email.com', tel:'', servico:'Hidratação Profunda', data:'2026-05-23', hora:'14:30', obs:'Alergia a amônia', status:'Pendente' },
+    { id:4, nome:'Roberto Lima', email:'rob@email.com', tel:'(11) 91234-5678', servico:'Tratamento Capilar', data:'2026-05-24', hora:'09:00', obs:'', status:'Cancelado' },
+  ];
+  salvar();
+}
+
+function salvar() { localStorage.setItem('ag_elara', JSON.stringify(agendamentos)); }
+
+// Vibecode — formatação ISO → pt-BR
+function formatarData(data, hora) {
+  const dt = new Date(`${data}T${hora}:00`);
+  if (isNaN(dt)) return 'Data inválida';
+  return dt.toLocaleString('pt-BR', { timeZone:'America/Sao_Paulo', day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' }).replace(',', ' às');
+}
+
+document.getElementById('f-data').min = new Date().toISOString().split('T')[0];
+
+function submitForm() {
+  const nome=document.getElementById('f-nome').value.trim(), email=document.getElementById('f-email').value.trim(), servico=document.getElementById('f-servico').value, data=document.getElementById('f-data').value, hora=document.getElementById('f-hora').value, tel=document.getElementById('f-tel').value.trim(), obs=document.getElementById('f-obs').value.trim();
+  if (!nome||!email||!servico||!data||!hora) { showToast('Preencha todos os campos obrigatórios (*)','error'); return; }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showToast('E-mail inválido','error'); return; }
+  agendamentos.unshift({ id:Date.now(), nome, email, tel, servico, data, hora, obs, status:'Pendente' });
+  salvar(); updateStats(); renderTable();
+  ['f-nome','f-email','f-tel','f-obs'].forEach(id=>document.getElementById(id).value='');
+  ['f-servico','f-hora','f-data'].forEach(id=>document.getElementById(id).value='');
+  showToast('✦ Agendamento registrado! Confirmação enviada por e-mail.','success');
+}
+
+function updateStats() {
+  document.getElementById('stat-total').textContent=agendamentos.length;
+  ['Pendente','Confirmado','Cancelado'].forEach(s=>document.getElementById('stat-'+s.toLowerCase()).textContent=agendamentos.filter(a=>a.status===s).length);
+}
+
+function setFilter(btn) {
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active'); filtroAtivo=btn.dataset.f; renderTable();
+}
+
+function renderTable() {
+  const search=document.getElementById('search').value.toLowerCase(), tbody=document.getElementById('table-body');
+  const lista=agendamentos.filter(a=>(filtroAtivo==='Todos'||a.status===filtroAtivo)&&(!search||[a.nome,a.email,a.servico].some(v=>v.toLowerCase().includes(search))));
+  if (!lista.length) { tbody.innerHTML='<tr><td colspan="6"><div class="empty-st">📭 Nenhum agendamento encontrado.</div></td></tr>'; return; }
+  tbody.innerHTML=lista.map((a,i)=>`
+    <tr onclick="openModal(${a.id})">
+      <td style="color:var(--texto-mudo);font-size:0.75rem;">#${String(i+1).padStart(2,'0')}</td>
+      <td><div class="td-nome">${a.nome}</div><div class="td-email">${a.email}</div></td>
+      <td><span class="td-serv">${a.servico}</span></td>
+      <td class="td-data">${formatarData(a.data,a.hora)}</td>
+      <td onclick="event.stopPropagation()"><span class="sbadge s-${a.status}" onclick="cycleStatus(${a.id})" title="Clique para alterar">${a.status}</span></td>
+      <td onclick="event.stopPropagation()"><button class="btn-trash" onclick="deletar(${a.id})">🗑</button></td>
+    </tr>`).join('');
+}
+
+function cycleStatus(id) {
+  const a=agendamentos.find(x=>x.id===id); if(!a)return;
+  const c={Pendente:'Confirmado',Confirmado:'Cancelado',Cancelado:'Pendente'};
+  a.status=c[a.status]; salvar(); updateStats(); renderTable();
+  showToast(`Status → ${a.status}`,'success');
+}
+
+function deletar(id) {
+  agendamentos=agendamentos.filter(a=>a.id!==id);
+  salvar(); updateStats(); renderTable(); closeModal();
+  showToast('Agendamento excluído.','error');
+}
+
+function openModal(id) {
+  const a=agendamentos.find(x=>x.id===id); if(!a)return;
+  document.getElementById('modal-name').textContent=a.nome;
+  document.getElementById('modal-body').innerHTML=`
+    <div class="mrow"><span class="mic">📧</span><div><div class="mlbl">E-mail</div><div class="mval">${a.email}</div></div></div>
+    ${a.tel?`<div class="mrow"><span class="mic">📱</span><div><div class="mlbl">Telefone</div><div class="mval">${a.tel}</div></div></div>`:''}
+    <div class="mrow"><span class="mic">✂️</span><div><div class="mlbl">Serviço</div><div class="mval">${a.servico}</div></div></div>
+    <div class="mrow"><span class="mic">📅</span><div><div class="mlbl">Data e Hora</div><div class="mval">${formatarData(a.data,a.hora)}</div></div></div>
+    <div class="mrow"><span class="mic">🏷</span><div><div class="mlbl">Status</div><div class="mval"><span class="sbadge s-${a.status}">${a.status}</span></div></div></div>
+    ${a.obs?`<div class="mrow"><span class="mic">📝</span><div><div class="mlbl">Observações</div><div class="mval">${a.obs}</div></div></div>`:''}`;
+  document.getElementById('modal-actions').innerHTML=`
+    <button class="mbtn mc" onclick="setStatus(${id},'Confirmado')">✓ Confirmar</button>
+    <button class="mbtn mx" onclick="setStatus(${id},'Cancelado')">✕ Cancelar</button>
+    <button class="mbtn md" onclick="deletar(${id})">🗑 Excluir</button>`;
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+function setStatus(id,s) {
+  const a=agendamentos.find(x=>x.id===id);
+  if(a){a.status=s;salvar();updateStats();renderTable();}
+  closeModal(); showToast(`Agendamento ${s.toLowerCase()}!`,'success');
+}
+
+function closeModal(e) {
+  if(e&&e.target!==document.getElementById('modal-overlay'))return;
+  document.getElementById('modal-overlay').classList.remove('open');
+}
+
+function showToast(msg,type='') {
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.className='toast '+type; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3400);
+}
+
+updateStats(); renderTable();
+</script>
+</body>
+</html>
